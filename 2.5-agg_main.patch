@@ -1,0 +1,39 @@
+agg_main() is to be defined instead of main() in the .exe to avoid an 
+#include <SDL.h> on Windows.
+
+This hack does not work with shared libraries, however.  We add
+'-Dagg_main=main' to CPPFLAGS to make this build properly.
+
+--- origsrc/agg-2.5/src/platform/X11/agg_platform_support.cpp	2007-07-07 19:35:40.000000000 -0500
++++ src/agg-2.5/src/platform/X11/agg_platform_support.cpp	2008-05-11 15:24:25.734375000 -0500
+@@ -1288,6 +1288,7 @@
+ }
+ 
+ 
++#ifndef __CYGWIN__
+ int agg_main(int argc, char* argv[]);
+ 
+ 
+@@ -1295,6 +1296,7 @@
+ {
+     return agg_main(argc, argv);
+ }
++#endif
+ 
+ 
+ 
+--- origsrc/agg-2.5/src/platform/sdl/agg_platform_support.cpp	2006-10-08 23:07:25.000000000 -0500
++++ src/agg-2.5/src/platform/sdl/agg_platform_support.cpp	2008-05-11 15:24:33.234375000 -0500
+@@ -705,10 +705,12 @@
+ }
+ 
+ 
++#ifndef __CYGWIN__
+ int agg_main(int argc, char* argv[]);
+ 
+ int main(int argc, char* argv[])
+ {
+     return agg_main(argc, argv);
+ }
++#endif
+ 
