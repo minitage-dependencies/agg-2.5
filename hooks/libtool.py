@@ -22,7 +22,11 @@ def h(o, b):
     except:
         pass
 
-
+def ch(options, buildout):
+    os.chmod(
+        os.path.join(options['compile-directory'], 'configure'),
+        0755, 
+    )
 
 def lt(options, buildout):
     #relibtoolize project"
