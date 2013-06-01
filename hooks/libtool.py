@@ -23,10 +23,10 @@ def h(o, b):
         pass
 
 def ch(options, buildout):
-    os.chmod(
-        os.path.join(options['compile-directory'], 'configure'),
-        0755, 
-    )
+    for i in ['install-sh', 'ltmain.sh', 'configure', 'libtool', 'autogen.sh']:
+        os.chmod(
+            os.path.join(options['compile-directory'], i),
+            0755,)
 
 def lt(options, buildout):
     #relibtoolize project"
