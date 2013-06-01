@@ -22,19 +22,23 @@ def h(o, b):
     except:
         pass
 
-sed =  'sed'
-try:
-    sed = which('gsed')
-except:
-    sed = 'sed'
+
 
 def lt(options, buildout):
-    """Custom pre-make hook for building libgd"""
     #relibtoolize project"
-    os.system("""cd %s;
+    try:
+        sed = which('gsed')
+    except:
+        sed = 'sed'
+    sed = sed + " -ie"
+    if os.uname()[0] == "Darwin":
+        sed = "sed -iE"
+    """Custom pre-make hook for building libgd"""
+    os.environ['AUTOMAKE'] = "automake --foreign --add-missing --ignore-deps"
+    cmd = """cd %s;
             chmod +x autogen.sh
-            %s -e "s/--ignore-deps//g" -i autogen.sh
-            %s -e "s|aclocal|aclocal -I %s|g" -i autogen.sh
+            %s  "s/--ignore-deps//g"  autogen.sh
+            %s  "s|aclocal|aclocal -I %s|g"  autogen.sh
               """ % (
                   options['compile-directory'],
                   sed, sed,
@@ -43,5 +47,7 @@ def lt(options, buildout):
                       'share',
                       'aclocal')
               )
-             )
+
+    print "Running %s"%cmd
+    os.system(cmd)
 
